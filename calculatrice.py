@@ -1,11 +1,17 @@
 import tkinter as tk
 
 window = tk.Tk()
-
 ent_input = tk.Entry()
+history = []
 
 def insertNum(num):
     ent_input.insert(tk.END, f"{num}")
+
+def historyToString(history):
+    string = ""
+    for calc in history:
+        string += f"{calc[1] + '=>' + calc[2]}"
+    return string
 
 num_pad = tk.Frame(
     master = window
@@ -14,6 +20,16 @@ num_pad = tk.Frame(
 operation_pad = tk.Frame(
     master = window
 )
+
+history_log = tk.Button(
+    master = window,
+    text = historyToString(history)
+)
+
+def historise(calc):
+    print(calc)
+    print(history)
+    history.append(calc)
 
 def generateNumPad(maxnum):
     for i in range(maxnum):
@@ -33,6 +49,7 @@ def calc(calc):
     result = eval(calc)
     ent_input.delete(0, tk.END)
     ent_input.insert(0, result)
+    historise([calc, result])
 
 btn0 = tk.Button(
      master = num_pad,
@@ -170,9 +187,13 @@ operation_pad.pack(
     side = tk.LEFT
 )
 
-
 num_pad.pack(
     fill = tk.X
+)
+
+history_log.pack(
+    side = tk.RIGHT
+    fill = tk.BOTH
 )
 
 window.mainloop()
